@@ -1,36 +1,18 @@
-/**
- * @license
- * Copyright 2021 Google LLC. All Rights Reserved.
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- * =============================================================================
- */
-
 import '@tensorflow/tfjs-backend-webgl';
 import * as mpHands from '@mediapipe/hands';
 
 import * as tfjsWasm from '@tensorflow/tfjs-backend-wasm';
 
-tfjsWasm.setWasmPaths(
-    `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${
-        tfjsWasm.version_wasm}/dist/`);
+const wasmPath = `https://cdn.jsdelivr.net/npm/@tensorflow/tfjs-backend-wasm@${tfjsWasm.version_wasm}/dist/`
+tfjsWasm.setWasmPaths(wasmPath);
 
 import * as handdetection from '@tensorflow-models/hand-pose-detection';
 
-import {Camera} from './camera';
-import {setupDatGui} from './option_panel';
-import {STATE} from './shared/params';
-import {setupStats} from './shared/stats_panel';
-import {setBackendAndEnvFlags} from './shared/util';
+import { Camera } from './camera';
+import { setupDatGui } from './option_panel';
+import { STATE } from './shared/params';
+import { setupStats } from './shared/stats_panel';
+import { setBackendAndEnvFlags } from './shared/util';
 
 let detector, camera, stats;
 let startInferenceTime, numInferences = 0;
@@ -105,8 +87,8 @@ function endEstimateHandsStats() {
     const averageInferenceTime = inferenceTimeSum / numInferences;
     inferenceTimeSum = 0;
     numInferences = 0;
-    stats.customFpsPanel.update(
-        1000.0 / averageInferenceTime, 120 /* maxValue */);
+    // stats.customFpsPanel.update(
+    //   1000.0 / averageInferenceTime, 120 /* maxValue */);
     lastPanelUpdate = endInferenceTime;
   }
 }
@@ -132,8 +114,8 @@ async function renderResult() {
     // contain a model that doesn't provide the expected output.
     try {
       hands = await detector.estimateHands(
-          camera.video,
-          {flipHorizontal: false});
+        camera.video,
+        { flipHorizontal: false });
     } catch (error) {
       detector.dispose();
       detector = null;
@@ -173,7 +155,7 @@ async function app() {
 
   await setupDatGui(urlParams);
 
-  stats = setupStats();
+  // stats = setupStats();
 
   camera = await Camera.setupCamera(STATE.camera);
 
